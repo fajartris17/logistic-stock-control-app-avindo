@@ -1,0 +1,9 @@
+diff --git a/APK_DAILY_REPORT_REV11_3LEMBAR_A4_6FORM_FILTER_HISTORY.html b/APK_DAILY_REPORT_REV11_3LEMBAR_A4_6FORM_FILTER_HISTORY.html
+--- a/APK_DAILY_REPORT_REV11_3LEMBAR_A4_6FORM_FILTER_HISTORY.html
++++ b/APK_DAILY_REPORT_REV11_3LEMBAR_A4_6FORM_FILTER_HISTORY.html
+@@ -3,6 +3,7 @@
+ <html lang="id" style="--av2m-page-pad-top: 3mm; --av2m-page-pad-bottom: 1.5mm; --av2m-form-h: 150mm; --av2m-gap: 0.8mm; --av2m-kop-h: 21mm; --av2m-kop-logo-col: 52.1mm; --av2m-kop-company-font: 18.6pt; --av2m-kop-addr-font: 6.65pt; --av2m-border: 0.25mm; --av2m-table-font: 6.95pt; --av2m-point-font: 4pt; --av2m-ket-font: 6.75pt; --av2m-cell-pad-y: 1.43mm; --av2m-cell-pad-x: 0.32mm; --av2m-row-meta: 3.95mm; --av2m-row-detail-body: 7.05mm; --av2m-photo-gap: 0.8mm; --av2m-photo-area-h: 24.2mm; --av2m-photo-box-h: 22.6mm; --av2m-sign-h: 20.05mm; --av2m-sign-gap: 95.9mm; --av2m-name-font: 5.25pt; --av2m-name-title-gap: 0mm; --av2m-paraf-top: 20.95mm; --av2m-paraf-right: 1mm; --av2m-paraf-w: 34mm; --av2m-paraf-h: 4.8mm; --av2m-paraf-font: 3.45pt;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
++<link rel="stylesheet" href="fixes/apk_daily_report_print_fix.css">
+ <meta content="width=device-width,initial-scale=1" name="viewport">
+ <title>PT AVINDO ENERGI NUSANTARA - Daily Report App - Form Rekap Border Hitam A4</title>
+ <style>
