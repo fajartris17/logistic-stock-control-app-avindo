@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="AVINDO logo">
+  <rect width="1200" height="900" fill="#fff"/>
+  <path d="M140 390 L430 70 H760 L910 250 H690 L600 155 L430 390 Z" fill="#e60000"/>
+  <path d="M140 510 H390 L600 745 L810 510 H1060 L760 840 H440 Z" fill="#0b63b6"/>
+  <path d="M555 330 C660 235 825 190 940 220 C890 270 760 330 625 430 C640 375 620 350 555 330 Z" fill="#14a51f"/>
+  <path d="M520 380 C570 300 645 250 760 220 C680 270 620 330 585 405 Z" fill="#0b63b6"/>
+  <text x="105" y="560" font-family="Arial Black, Arial, sans-serif" font-size="155" font-weight="900" fill="#e60000">A</text>
+  <text x="245" y="560" font-family="Arial Black, Arial, sans-serif" font-size="155" font-weight="900" fill="#0b63b6">V</text>
+  <text x="390" y="560" font-family="Arial Black, Arial, sans-serif" font-size="155" font-weight="900" fill="#10a51c">INDO</text>
+</svg>
