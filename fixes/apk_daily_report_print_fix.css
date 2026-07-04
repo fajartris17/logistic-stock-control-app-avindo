@@ -1,0 +1,210 @@
+/*
+  APK_DAILY_REPORT - PRINT LAYOUT FIX
+  Tujuan:
+  - Tampilan FORM di layar, Print Preview, PDF, dan JPG dibuat konsisten.
+  - Area laporan terkunci 1 halaman A4 landscape.
+  - Foto dokumentasi tetap berada di dalam frame.
+  - Tombol/input kontrol aplikasi tidak ikut tercetak.
+
+  Cara pakai:
+  1. Link file ini pada HTML utama:
+     <link rel="stylesheet" href="fixes/apk_daily_report_print_fix.css">
+  2. Pastikan area laporan utama memakai salah satu selector berikut:
+     id="printArea" atau id="formDailyReport" atau class="print-area" atau class="daily-report-form".
+  3. Area foto dokumentasi sebaiknya memakai class="photo-frame" dan img di dalamnya.
+*/
+
+:root {
+  --print-a4-landscape-width: 277mm;
+  --print-a4-landscape-height: 190mm;
+  --print-border: #1f5fae;
+}
+
+/* Area laporan utama */
+#printArea,
+#formDailyReport,
+.print-area,
+.daily-report-form {
+  box-sizing: border-box;
+  width: var(--print-a4-landscape-width);
+  max-width: var(--print-a4-landscape-width);
+  margin: 0 auto;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* Tabel laporan dibuat stabil */
+#printArea table,
+#formDailyReport table,
+.print-area table,
+.daily-report-form table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+#printArea th,
+#printArea td,
+#formDailyReport th,
+#formDailyReport td,
+.print-area th,
+.print-area td,
+.daily-report-form th,
+.daily-report-form td {
+  box-sizing: border-box;
+  overflow: hidden;
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+/* Logo, gambar, foto, dan object tidak boleh keluar frame */
+#printArea img,
+#formDailyReport img,
+.print-area img,
+.daily-report-form img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  box-sizing: border-box;
+}
+
+.photo-frame,
+.dokumentasi-frame,
+.document-photo,
+.foto-dokumentasi {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--print-border);
+  background: #ffffff;
+}
+
+.photo-frame img,
+.dokumentasi-frame img,
+.document-photo img,
+.foto-dokumentasi img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Sembunyikan tombol/control dari area laporan */
+button,
+.btn,
+.toolbar,
+.action-bar,
+.no-print,
+input[type="button"],
+input[type="submit"],
+input[type="file"] {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* Print setup utama */
+@page {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@media print {
+  html,
+  body {
+    width: 297mm;
+    min-height: 210mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Sembunyikan semua elemen luar, lalu tampilkan hanya area laporan */
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printArea,
+  #printArea *,
+  #formDailyReport,
+  #formDailyReport *,
+  .print-area,
+  .print-area *,
+  .daily-report-form,
+  .daily-report-form * {
+    visibility: visible !important;
+  }
+
+  #printArea,
+  #formDailyReport,
+  .print-area,
+  .daily-report-form {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: var(--print-a4-landscape-width) !important;
+    max-width: var(--print-a4-landscape-width) !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    zoom: 1 !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  table,
+  tr,
+  td,
+  th,
+  thead,
+  tbody,
+  tfoot,
+  .section,
+  .report-section,
+  .signature-section,
+  .photo-section,
+  .documentation-section {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  img,
+  svg,
+  canvas,
+  .photo-frame,
+  .dokumentasi-frame,
+  .document-photo,
+  .foto-dokumentasi {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    transform: none !important;
+  }
+
+  .photo-frame img,
+  .dokumentasi-frame img,
+  .document-photo img,
+  .foto-dokumentasi img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  button,
+  .btn,
+  .toolbar,
+  .action-bar,
+  .no-print,
+  input[type="button"],
+  input[type="submit"],
+  input[type="file"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
