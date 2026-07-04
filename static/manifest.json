@@ -1,0 +1,15 @@
+{
+  "name": "LOGISTIC STOCK CONTROL APP AVINDO",
+  "short_name": "AVINDO Logistic",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b1f3a",
+  "icons": [
+    {
+      "src": "/static/assets/avindo_logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
