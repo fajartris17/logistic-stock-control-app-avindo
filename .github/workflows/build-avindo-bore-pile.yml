@@ -1,0 +1,151 @@
+name: Build AVINDO Bored Pile APK
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/build-avindo-bore-pile.yml'
+      - 'avindo-bore-pile-build/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platform-tools' 'platforms;android-35' 'build-tools;35.0.0'
+
+      - name: Generate Android project
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/avindo-bore-pile-build/generated"
+          mkdir -p "$ROOT/app/src/main/java/com/avindo/borepile" \
+                   "$ROOT/app/src/main/assets" \
+                   "$ROOT/app/src/main/res/values"
+
+          cat avindo-bore-pile-build/payload/apphtml.part* | base64 -d | gunzip > "$ROOT/app/src/main/assets/index.html"
+          base64 -d avindo-bore-pile-build/payload/mainjava.b64 | gunzip > "$ROOT/app/src/main/java/com/avindo/borepile/MainActivity.java"
+
+          cat > "$ROOT/settings.gradle" <<'EOF'
+          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+          dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+          rootProject.name='AvindoBorePileEstimator'
+          include ':app'
+          EOF
+
+          cat > "$ROOT/build.gradle" <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.7.3' apply false
+          }
+          EOF
+
+          cat > "$ROOT/gradle.properties" <<'EOF'
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          android.useAndroidX=true
+          android.nonTransitiveRClass=true
+          EOF
+
+          cat > "$ROOT/app/build.gradle" <<'EOF'
+          plugins { id 'com.android.application' }
+
+          android {
+              namespace 'com.avindo.borepile'
+              compileSdk 35
+              defaultConfig {
+                  applicationId 'com.avindo.borepile'
+                  minSdk 24
+                  targetSdk 35
+                  versionCode 1
+                  versionName '1.0'
+              }
+              buildTypes {
+                  debug { minifyEnabled false }
+                  release {
+                      minifyEnabled false
+                      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                  }
+              }
+          }
+          EOF
+
+          cat > "$ROOT/app/proguard-rules.pro" <<'EOF'
+          -keepclassmembers class com.avindo.borepile.MainActivity$Bridge { public *; }
+          EOF
+
+          cat > "$ROOT/app/src/main/AndroidManifest.xml" <<'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <application
+                  android:allowBackup="true"
+                  android:label="AVINDO Bored Pile"
+                  android:theme="@style/AppTheme"
+                  android:usesCleartextTraffic="true"
+                  android:hardwareAccelerated="true">
+                  <activity
+                      android:name=".MainActivity"
+                      android:screenOrientation="unspecified"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat > "$ROOT/app/src/main/res/values/styles.xml" <<'EOF'
+          <resources>
+              <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+                  <item name="android:fontFamily">sans</item>
+                  <item name="android:windowActionModeOverlay">true</item>
+                  <item name="android:colorAccent">#0B63B6</item>
+                  <item name="android:navigationBarColor">#0B2F59</item>
+                  <item name="android:statusBarColor">#0B2F59</item>
+              </style>
+          </resources>
+          EOF
+
+      - name: Build debug APK
+        run: |
+          cd avindo-bore-pile-build/generated
+          gradle --no-daemon :app:assembleDebug --stacktrace
+
+      - name: Prepare APK
+        run: |
+          mkdir -p output
+          cp avindo-bore-pile-build/generated/app/build/outputs/apk/debug/app-debug.apk \
+             output/AVINDO_BORE_PILE_ESTIMATOR_v1.0.apk
+          sha256sum output/AVINDO_BORE_PILE_ESTIMATOR_v1.0.apk > output/SHA256.txt
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AVINDO_BORE_PILE_ESTIMATOR_APK
+          path: output/*
+          if-no-files-found: error
+          retention-days: 30
